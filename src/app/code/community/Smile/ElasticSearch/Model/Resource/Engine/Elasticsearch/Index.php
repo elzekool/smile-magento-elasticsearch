@@ -217,7 +217,9 @@ class Smile_ElasticSearch_Model_Resource_Engine_Elasticsearch_Index
 
         foreach ($indexSettings['analysis']['analyzer'] as &$analyzer) {
             $analyzer['filter'] = isset($analyzer['filter']) ? explode(',', $analyzer['filter']) : array();
-            $analyzer['filter'] = array_values(array_intersect($availableFilters, $analyzer['filter']));
+            $analyzer['filter'] = array_filter($analyzer['filter'], function($filter) use ($availableFilters) {
+                return in_array($filter, $availableFilters);
+            });
             $analyzer['char_filter'] = isset($analyzer['char_filter']) ? explode(',', $analyzer['char_filter']) : array();
         }
 
